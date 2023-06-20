@@ -7,6 +7,18 @@
 #include "InputActionValue.h"
 #include "LuxLabyrinthCharacter.generated.h"
 
+class UCameraComponent;
+class UInputComponent;
+class UPointLightComponent;
+class UStaticMeshComponent;
+class USpringArmComponent;
+
+UENUM(BlueprintType)
+enum class EState : uint8
+{
+	Light     UMETA(DisplayName = "Light"),
+	Dark      UMETA(DisplayName = "Dark")
+};
 
 UCLASS(config=Game)
 class ALuxLabyrinthCharacter : public ACharacter
@@ -14,53 +26,40 @@ class ALuxLabyrinthCharacter : public ACharacter
 	GENERATED_BODY()
 
 	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-	
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* DefaultMappingContext;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
-
-	/** Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
-
-	/** Look Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lux", meta = (AllowPrivateAccess = "true"))
+	UPointLightComponent* PointLight;
 
 public:
 	ALuxLabyrinthCharacter();
-	
-
-protected:
-
-	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
-
-	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
 			
-
 protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	// To add mapping context
 	virtual void BeginPlay();
 
 public:
+	/** Get current state **/
+	UFUNCTION(BlueprintPure, Category = "Lux")
+	EState GetCurrentState() const
+	{
+		return CurrentState;
+	}
+
+	//** Set state **/
+	UFUNCTION(BlueprintCallable, Category = "Lux")
+	void SetState(EState NewState);
+
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+	EState CurrentState = EState::Dark;
 };
 

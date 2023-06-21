@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "LuxLabyrinthCharacter.h"
+#include "LuxLabyrinthHoop.h"
+#include "LuxLabyrinthHoopCountHUD.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,8 +11,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "EngineUtils.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -61,6 +65,12 @@ void ALuxLabyrinthCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	// Subscribe to hoop activation events
+	for (TActorIterator<ALuxLabyrinthHoop> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		ActorItr->OnHoopActivated.AddDynamic(this, &ALuxLabyrinthCharacter::OnHoopActivated);
+	}
 }
 
 void ALuxLabyrinthCharacter::SetState(EState NewState)
@@ -78,6 +88,9 @@ void ALuxLabyrinthCharacter::SetState(EState NewState)
 	}
 }
 
-
+void ALuxLabyrinthCharacter::OnHoopActivated()
+{
+	SetState(EState::Light);
+}
 
 

@@ -54,6 +54,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Lux")
 	void SetState(EState NewState);
 
+	UFUNCTION()
+	void OnHoopActivated();
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/

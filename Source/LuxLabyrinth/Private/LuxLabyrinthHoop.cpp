@@ -2,6 +2,7 @@
 
 
 #include "LuxLabyrinthHoop.h"
+#include "LuxLabyrinthBuilding.h"
 #include "LuxLabyrinthHoopCountHUD.h"
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
 #include "Components/BoxComponent.h"
@@ -18,6 +19,8 @@ ALuxLabyrinthHoop::ALuxLabyrinthHoop()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 	CollisionBox->SetupAttachment(HoopMesh);
+
+	CurrentBuildingIndex = 0;
 }
 
 // Called when the game starts or when spawned
@@ -40,7 +43,26 @@ void ALuxLabyrinthHoop::OnPassedThrough(UPrimitiveComponent* OverlappedComponent
 	if (!bHasBeenActivated && OtherActor->IsA(ALuxLabyrinthCharacter::StaticClass()))
 	{
 		bHasBeenActivated = true;
+		LightUpNextBuilding();
 		OnHoopActivated.Broadcast();
+	}
+}
+
+void ALuxLabyrinthHoop::LightUpNextBuilding()
+{
+	if (CurrentBuildingIndex < Buildings.Num())
+	{
+		ALuxLabyrinthBuilding* Building = Buildings[CurrentBuildingIndex];
+		if (Building)
+		{
+			Building->LightUp();
+		}
+
+		CurrentBuildingIndex++;
+
+		// Schedule to light up the next building after a delay
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextBuilding, 0.5f, false);
 	}
 }
 

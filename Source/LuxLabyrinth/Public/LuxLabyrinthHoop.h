@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "LuxLabyrinthHoop.generated.h"
 
+class ALuxLabyrinthBuilding;
 class UBoxComponent;
 class UStaticMeshComponent;
 
@@ -45,4 +46,12 @@ public:
 	// Binding event for hoop activation
 	UPROPERTY(BlueprintAssignable, Category = "Hoop")
 	FOnHoopActivatedSignature OnHoopActivated;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildings")
+	TArray<ALuxLabyrinthBuilding*> Buildings;
+
+private:
+	int32 CurrentBuildingIndex;
+
+	void LightUpNextBuilding();
 };

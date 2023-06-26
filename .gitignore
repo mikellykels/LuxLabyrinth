@@ -509,4 +509,4 @@ FodyWeavers.xsd
 Plugins/*
 Content/Cargo/*
 Import/*
-Content/LuxLabyrinth/Blueprints/Actors/Buildings/*
+Content/*

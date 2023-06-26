@@ -4,6 +4,7 @@
 #include "LuxLabyrinthHoop.h"
 #include "LuxLabyrinthBuilding.h"
 #include "LuxLabyrinthHoopCountHUD.h"
+#include "LuxLabyrinthStreetLightPost.h"
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -21,6 +22,7 @@ ALuxLabyrinthHoop::ALuxLabyrinthHoop()
 	CollisionBox->SetupAttachment(HoopMesh);
 
 	CurrentBuildingIndex = 0;
+	CurrentLightPostIndex = 0;
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +46,7 @@ void ALuxLabyrinthHoop::OnPassedThrough(UPrimitiveComponent* OverlappedComponent
 	{
 		bHasBeenActivated = true;
 		LightUpNextBuilding();
+		LightUpNextLight();
 		OnHoopActivated.Broadcast();
 	}
 }
@@ -63,6 +66,24 @@ void ALuxLabyrinthHoop::LightUpNextBuilding()
 		// Schedule to light up the next building after a delay
 		FTimerHandle TimerHandle;
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextBuilding, 0.5f, false);
+	}
+}
+
+void ALuxLabyrinthHoop::LightUpNextLight()
+{
+	if (CurrentLightPostIndex < LightPosts.Num())
+	{
+		ALuxLabyrinthStreetLightPost* LightPost = LightPosts[CurrentLightPostIndex];
+		if (LightPost)
+		{
+			LightPost->LightUp();
+		}
+
+		CurrentLightPostIndex++;
+
+		// Schedule to light up the next light after a delay
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextLight, 0.15f, false);
 	}
 }
 

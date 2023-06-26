@@ -7,6 +7,7 @@
 #include "LuxLabyrinthHoop.generated.h"
 
 class ALuxLabyrinthBuilding;
+class ALuxLabyrinthStreetLightPost;
 class UBoxComponent;
 class UStaticMeshComponent;
 
@@ -50,8 +51,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buildings")
 	TArray<ALuxLabyrinthBuilding*> Buildings;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light Posts")
+	TArray<ALuxLabyrinthStreetLightPost*> LightPosts;
+
 private:
 	int32 CurrentBuildingIndex;
+	int32 CurrentLightPostIndex;
 
 	void LightUpNextBuilding();
+	void LightUpNextLight();
 };

@@ -13,9 +13,14 @@ ALuxLabyrinthBuilding::ALuxLabyrinthBuilding()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
 
-	PointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent"));
-	PointLight->SetupAttachment(Root);
-	PointLight->SetVisibility(false);
+	PointLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent1"));
+	PointLight1->SetupAttachment(Root);
+	PointLight1->SetVisibility(false);
+
+
+	PointLight2 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent2"));
+	PointLight2->SetupAttachment(Root);
+	PointLight2->SetVisibility(false);
 
 	bIsLit = false;
 }
@@ -41,7 +46,8 @@ FTimerHandle ALuxLabyrinthBuilding::LightUp()
 	{
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
 		{
-			PointLight->SetVisibility(true);
+			PointLight1->SetVisibility(true);
+			PointLight2->SetVisibility(true);
 			bIsLit = true;
 		}, 0.5f, false);
 	}

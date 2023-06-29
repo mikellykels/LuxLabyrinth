@@ -35,8 +35,12 @@ private:
 	USceneComponent* Root;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Light", meta = (AllowPrivateAccess = "true"))
-	UPointLightComponent* PointLight;
+	UPointLightComponent* PointLight1;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Light", meta = (AllowPrivateAccess = "true"))
+	UPointLightComponent* PointLight2;
 
 	// Whether the building is lit or not
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Light", meta = (AllowPrivateAccess = "true"))
 	bool bIsLit;
 };

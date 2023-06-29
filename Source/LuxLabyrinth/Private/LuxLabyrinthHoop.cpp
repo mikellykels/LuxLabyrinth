@@ -83,7 +83,7 @@ void ALuxLabyrinthHoop::LightUpNextLight()
 
 		// Schedule to light up the next light after a delay
 		FTimerHandle TimerHandle;
-		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextLight, 0.15f, false);
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextLight, 0.10f, false);
 	}
 }
 

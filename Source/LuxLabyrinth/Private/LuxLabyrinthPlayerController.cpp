@@ -58,6 +58,27 @@ void ALuxLabyrinthPlayerController::Move(const FInputActionValue& Value)
 		// add movement 
 		LuxLabyrinthCharacter->AddMovementInput(ForwardDirection, MovementVector.Y);
 		LuxLabyrinthCharacter->AddMovementInput(RightDirection, MovementVector.X);
+
+		if (MovementVector.Y > 0 && !bHasMovedForward)
+		{
+			OnMoveForward.Broadcast();
+			bHasMovedForward = true;
+		}
+		else if (MovementVector.Y < 0 && !bHasMovedBackward)
+		{
+			OnMoveBackward.Broadcast();
+			bHasMovedBackward = true;
+		}
+		if (MovementVector.X > 0 && !bHasMovedRight)
+		{
+			OnMoveRight.Broadcast();
+			bHasMovedRight = true;
+		}
+		else if (MovementVector.X < 0 && !bHasMovedLeft)
+		{
+			OnMoveLeft.Broadcast();
+			bHasMovedLeft = true;
+		}
 	}
 }
 
@@ -73,11 +94,22 @@ void ALuxLabyrinthPlayerController::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		LuxLabyrinthCharacter->AddControllerYawInput(LookAxisVector.X);
 		LuxLabyrinthCharacter->AddControllerPitchInput(LookAxisVector.Y);
+
+		if (LookAxisVector.X != 0 && LookAxisVector.Y != 0 && !bHasLooked)
+		{
+			OnLook.Broadcast();
+			bHasLooked = true;
+		}
 	}
 }
 
 void ALuxLabyrinthPlayerController::JumpTriggered()
 {
+	if (!bHasJumped)
+	{
+		OnJump.Broadcast();
+		bHasJumped = true;
+	}
 	GetCharacter()->Jump();
 }
 

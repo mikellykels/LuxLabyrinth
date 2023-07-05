@@ -4,6 +4,7 @@
 #include "LuxLabyrinthShadowCharacterAI.h"
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 ALuxLabyrinthShadowCharacterAI::ALuxLabyrinthShadowCharacterAI()
@@ -42,6 +43,12 @@ void ALuxLabyrinthShadowCharacterAI::SetupPlayerInputComponent(UInputComponent* 
 void ALuxLabyrinthShadowCharacterAI::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ALuxLabyrinthCharacter* LuxCharacter = Cast<ALuxLabyrinthCharacter>(OtherActor);
+
+	if (LuxCharacter != nullptr)
+	{
+		FDamageEvent DamageEvent;
+		LuxCharacter->TakeDamage(LuxCharacter->DamagePerHit, DamageEvent, GetController(), this);
+	}
 
 	if (LuxCharacter && LuxCharacter->GetCurrentState() != EState::Dark)
 	{

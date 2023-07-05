@@ -8,6 +8,8 @@
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 ALuxLabyrinthHoop::ALuxLabyrinthHoop()
@@ -48,6 +50,13 @@ void ALuxLabyrinthHoop::OnPassedThrough(UPrimitiveComponent* OverlappedComponent
 		LightUpNextBuilding();
 		LightUpNextLight();
 		OnHoopActivated.Broadcast();
+
+		//SoundCue Triggers
+		if (CollectSound)
+		{
+			FVector HoopLocation = GetActorLocation();
+			UGameplayStatics::PlaySoundAtLocation(this, CollectSound, HoopLocation);
+		}
 	}
 }
 

@@ -9,6 +9,6 @@ void ULuxLabyrinthHoopCountHUD::UpdateHoopCount(int32 TotalHoops, int32 Activate
 	if (HoopCountTextBlock)
 	{
 		int32 RemainingHoops = TotalHoops - ActivatedHoops;
-		HoopCountTextBlock->SetText(FText::Format(NSLOCTEXT("HoopCountHUD", "HoopCountFormat", "Hoops remaining: {0}"), RemainingHoops));
+		HoopCountTextBlock->SetText(FText::Format(NSLOCTEXT("HoopCountHUD", "HoopCountFormat", "Remaining: {0}"), RemainingHoops));
 	}
 }

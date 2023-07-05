@@ -9,6 +9,7 @@
 class ALuxLabyrinthBuilding;
 class ALuxLabyrinthStreetLightPost;
 class UBoxComponent;
+class USoundCue;
 class UStaticMeshComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHoopActivatedSignature);
@@ -35,6 +36,9 @@ protected:
 
 	// whether hoop has been activated before
 	bool bHasBeenActivated = false;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundCue* CollectSound = nullptr;
 
 public:	
 	// Called every frame

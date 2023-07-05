@@ -15,6 +15,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -93,4 +95,36 @@ void ALuxLabyrinthCharacter::OnHoopActivated()
 	SetState(EState::Light);
 }
 
+float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	FString TheFloatStr = FString::SanitizeFloat(ActualDamage);
+	if (ActualDamage > 0.f)
+	{
+		if (!bIsInvincible)
+		{
+			bIsInvincible = true;
+			Health -= ActualDamage;
+
+			// Make sure the new health value stays in the range between zero and max health.
+			Health = FMath::Clamp(Health, 0.0f, MaxHealth);
+			if (Health < 0)
+			{
+				Health = 0;
+			}
+			GetWorldTimerManager().SetTimer(InvincibilityTimer, this, &ALuxLabyrinthCharacter::EndInvincibility, 2.0f, false);
+		
+			OnHealthChanged.Broadcast(Health);
+
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetActorLocation(), GetActorRotation());
+		}
+	}
+
+	return ActualDamage;
+}
+
+void ALuxLabyrinthCharacter::EndInvincibility()
+{
+	bIsInvincible = false;
+}
 

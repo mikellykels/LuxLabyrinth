@@ -20,6 +20,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* HoopCountTextBlock;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* MainQuestTextBlock;
+
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	void UpdateHoopCount(int32 TotalHoops, int32 ActivatedHoops);
+
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	void UpdateMainQuestText(const FString& NewText);
 };

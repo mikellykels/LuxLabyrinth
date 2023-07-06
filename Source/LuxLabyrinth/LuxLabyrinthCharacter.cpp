@@ -17,6 +17,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,15 @@ void ALuxLabyrinthCharacter::OnHoopActivated()
 	SetState(EState::Light);
 }
 
+void ALuxLabyrinthCharacter::AddHealth(float Amount)
+{
+	// Increase health by amount, but do not exceed max health
+	Health = FMath::Clamp(Health + Amount, 0.0f, 100.0f);
+
+	// Notify that health has been updated
+	OnHealthChanged.Broadcast(Health);
+}
+
 float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
@@ -117,6 +127,13 @@ float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent
 			OnHealthChanged.Broadcast(Health);
 
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitFX, GetActorLocation(), GetActorRotation());
+
+			//SoundCue Triggers
+			if (HitSound)
+			{
+				FVector CharacterLocation = GetOwner()->GetActorLocation();
+				UGameplayStatics::PlaySoundAtLocation(this, HitSound, CharacterLocation);
+			}
 		}
 	}
 

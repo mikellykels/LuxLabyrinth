@@ -11,6 +11,7 @@ class UCameraComponent;
 class UInputComponent;
 class UParticleSystem;
 class UPointLightComponent;
+class USoundCue;
 class UStaticMeshComponent;
 class USpringArmComponent;
 
@@ -72,6 +73,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float DamagePerHit = 10.0f;
 
+	void AddHealth(float Amount);
+
 	UPROPERTY(BlueprintAssignable, Category = "EventDispatchers")
 	FHealthChangedSignature OnHealthChanged;
 
@@ -79,6 +82,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "FX")
 	UParticleSystem* HitFX;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundCue* HitSound = nullptr;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lux")
 	bool bIsInvincible = false;

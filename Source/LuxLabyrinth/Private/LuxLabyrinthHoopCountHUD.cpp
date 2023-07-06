@@ -12,3 +12,11 @@ void ULuxLabyrinthHoopCountHUD::UpdateHoopCount(int32 TotalHoops, int32 Activate
 		HoopCountTextBlock->SetText(FText::Format(NSLOCTEXT("HoopCountHUD", "HoopCountFormat", "Remaining: {0}"), RemainingHoops));
 	}
 }
+
+void ULuxLabyrinthHoopCountHUD::UpdateMainQuestText(const FString& NewText)
+{
+	if (MainQuestTextBlock)
+	{
+		MainQuestTextBlock->SetText(FText::FromString(NewText));
+	}
+}

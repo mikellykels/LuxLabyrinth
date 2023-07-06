@@ -13,11 +13,11 @@
 ALuxLabyrinthGameMode::ALuxLabyrinthGameMode()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/LuxLabyrinth/Blueprints/Characters/BP_Lux"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/LuxLabyrinth/Blueprints/Characters/BP_Lux"));
+	//if (PlayerPawnBPClass.Class != NULL)
+	//{
+	//	DefaultPawnClass = PlayerPawnBPClass.Class;
+	//}
 }
 
 void ALuxLabyrinthGameMode::BeginPlay()
@@ -37,6 +37,7 @@ void ALuxLabyrinthGameMode::BeginPlay()
 		HoopCountHUD = CreateWidget<ULuxLabyrinthHoopCountHUD>(GetWorld(), HoopCountHUDClass);
 		if (HoopCountHUD)
 		{
+			HoopCountHUD->SetVisibility(ESlateVisibility::Hidden);
 			HoopCountHUD->AddToViewport();
 			HoopCountHUD->UpdateHoopCount(TotalHoops, ActivatedHoops);
 		}

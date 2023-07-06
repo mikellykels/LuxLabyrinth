@@ -18,16 +18,19 @@ public:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Hoop")
 	void OnHoopActivated();
 
 	UFUNCTION(BlueprintCallable, Category = "Hoop")
 	ULuxLabyrinthHoopCountHUD* GetHoopHud() const;
 
-private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hoop")
 	int32 TotalHoops;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hoop")
 	int32 ActivatedHoops;
 
+private:
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<UUserWidget> HoopCountHUDClass;
 

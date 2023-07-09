@@ -108,7 +108,7 @@ void ALuxLabyrinthCharacter::AddHealth(float Amount)
 float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	FString TheFloatStr = FString::SanitizeFloat(ActualDamage);
+
 	if (ActualDamage > 0.f)
 	{
 		if (!bIsInvincible)
@@ -118,10 +118,7 @@ float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent
 
 			// Make sure the new health value stays in the range between zero and max health.
 			Health = FMath::Clamp(Health, 0.0f, MaxHealth);
-			if (Health < 0)
-			{
-				Health = 0;
-			}
+
 			GetWorldTimerManager().SetTimer(InvincibilityTimer, this, &ALuxLabyrinthCharacter::EndInvincibility, 2.0f, false);
 		
 			OnHealthChanged.Broadcast(Health);
@@ -131,8 +128,7 @@ float ALuxLabyrinthCharacter::TakeDamage(float DamageAmount, struct FDamageEvent
 			//SoundCue Triggers
 			if (HitSound)
 			{
-				FVector CharacterLocation = GetOwner()->GetActorLocation();
-				UGameplayStatics::PlaySoundAtLocation(this, HitSound, CharacterLocation);
+				UGameplayStatics::SpawnSoundAttached(HitSound, GetRootComponent());
 			}
 		}
 	}

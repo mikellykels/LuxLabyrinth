@@ -4,6 +4,7 @@
 #include "LuxLabyrinthHoop.h"
 #include "LuxLabyrinthBuilding.h"
 #include "LuxLabyrinthHoopCountHUD.h"
+#include "LuxLabyrinthPointLight.h"
 #include "LuxLabyrinthStreetLightPost.h"
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
 #include "Components/BoxComponent.h"
@@ -49,6 +50,7 @@ void ALuxLabyrinthHoop::OnPassedThrough(UPrimitiveComponent* OverlappedComponent
 		bHasBeenActivated = true;
 		LightUpNextBuilding();
 		LightUpNextLight();
+		LightUpNextPointLight();
 		OnHoopActivated.Broadcast();
 
 		//SoundCue Triggers
@@ -93,6 +95,24 @@ void ALuxLabyrinthHoop::LightUpNextLight()
 		// Schedule to light up the next light after a delay
 		FTimerHandle TimerHandle;
 		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextLight, 0.10f, false);
+	}
+}
+
+void ALuxLabyrinthHoop::LightUpNextPointLight()
+{
+	if (CurrentPointLightIndex < PointLights.Num())
+	{
+		ALuxLabyrinthPointLight* PointLight = PointLights[CurrentPointLightIndex];
+		if (PointLight)
+		{
+			PointLight->LightUp();
+		}
+
+		CurrentPointLightIndex++;
+
+		// Schedule to light up the next light after a delay
+		FTimerHandle TimerHandle;
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ALuxLabyrinthHoop::LightUpNextPointLight, 0.10f, false);
 	}
 }
 

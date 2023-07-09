@@ -7,6 +7,7 @@
 #include "LuxLabyrinthHoop.generated.h"
 
 class ALuxLabyrinthBuilding;
+class ALuxLabyrinthPointLight;
 class ALuxLabyrinthStreetLightPost;
 class UBoxComponent;
 class USoundCue;
@@ -58,10 +59,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Light Posts")
 	TArray<ALuxLabyrinthStreetLightPost*> LightPosts;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Point Lights")
+	TArray<ALuxLabyrinthPointLight*> PointLights;
+
 private:
 	int32 CurrentBuildingIndex;
 	int32 CurrentLightPostIndex;
+	int32 CurrentPointLightIndex;
 
 	void LightUpNextBuilding();
 	void LightUpNextLight();
+	void LightUpNextPointLight();
 };

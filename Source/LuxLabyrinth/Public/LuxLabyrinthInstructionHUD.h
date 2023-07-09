@@ -6,7 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "LuxLabyrinthInstructionHUD.generated.h"
 
-//class UImage;
 class UTextBlock;
 
 /**

@@ -3,7 +3,6 @@
 
 #include "LuxLabyrinthInstructionHUD.h"
 #include "LuxLabyrinthPlayerController.h"
-//#include "Components/Image.h"
 #include "Components/TextBlock.h"
 
 void ULuxLabyrinthInstructionHUD::NativeConstruct()

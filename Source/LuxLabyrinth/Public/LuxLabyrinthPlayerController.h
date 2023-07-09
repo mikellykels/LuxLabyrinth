@@ -13,6 +13,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveLeftSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMoveRightSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLookSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnJumpSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnToggleMenuSignature);
+
+class UUserWidget;
 
 /**
  * 
@@ -38,6 +41,10 @@ class LUXLABYRINTH_API ALuxLabyrinthPlayerController : public APlayerController
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* MenuAction;
+
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Input")
 	FOnMoveForwardSignature OnMoveForward;
@@ -56,6 +63,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Input")
 	FOnJumpSignature OnJump;
+
+	UPROPERTY(BlueprintAssignable, Category = "Input")
+	FOnToggleMenuSignature OnToggleMenu;
 
 	bool bHasMovedForward = false;
 	bool bHasMovedBackward = false;
@@ -78,4 +88,17 @@ protected:
 	/** Called for jump input */
 	void JumpTriggered();
 	void JumpReleased();
+
+	/** Called for menu input */
+	void ToggleMenuTriggered();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Input")
+	bool bIsInputEnabled = true;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<UUserWidget> MenuWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* MenuWidget;
 };

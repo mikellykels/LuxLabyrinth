@@ -3,6 +3,7 @@
 
 #include "LuxLabyrinthPlayerController.h"
 #include "LuxLabyrinth/LuxLabyrinthCharacter.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -15,6 +16,13 @@ void ALuxLabyrinthPlayerController::BeginPlay()
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+
+	MenuWidget = CreateWidget<UUserWidget>(this, MenuWidgetClass);
+	if (MenuWidget)
+	{
+		MenuWidget->AddToViewport();
+		MenuWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -33,11 +41,16 @@ void ALuxLabyrinthPlayerController::SetupInputComponent()
 		// ** Jumping ** //
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ALuxLabyrinthPlayerController::JumpTriggered);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ALuxLabyrinthPlayerController::JumpReleased);
+
+		//** Toggle menu **//
+		EnhancedInputComponent->BindAction(MenuAction, ETriggerEvent::Triggered, this, &ALuxLabyrinthPlayerController::ToggleMenuTriggered);
 	}
 }
 
 void ALuxLabyrinthPlayerController::Move(const FInputActionValue& Value)
 {
+	if (!bIsInputEnabled) return;
+
 	ALuxLabyrinthCharacter* LuxLabyrinthCharacter = Cast<ALuxLabyrinthCharacter>(GetPawn());
 
 	// input is a Vector2D
@@ -84,6 +97,8 @@ void ALuxLabyrinthPlayerController::Move(const FInputActionValue& Value)
 
 void ALuxLabyrinthPlayerController::Look(const FInputActionValue& Value)
 {
+	if (!bIsInputEnabled) return;
+
 	ALuxLabyrinthCharacter* LuxLabyrinthCharacter = Cast<ALuxLabyrinthCharacter>(GetPawn());
 
 	// input is a Vector2D
@@ -105,6 +120,8 @@ void ALuxLabyrinthPlayerController::Look(const FInputActionValue& Value)
 
 void ALuxLabyrinthPlayerController::JumpTriggered()
 {
+	if (!bIsInputEnabled) return;
+
 	if (!bHasJumped)
 	{
 		OnJump.Broadcast();
@@ -116,4 +133,49 @@ void ALuxLabyrinthPlayerController::JumpTriggered()
 void ALuxLabyrinthPlayerController::JumpReleased()
 {
 	GetCharacter()->StopJumping();
+}
+
+void ALuxLabyrinthPlayerController::ToggleMenuTriggered()
+{
+	if (MenuWidget)
+	{
+		if (MenuWidget->IsVisible())
+		{
+			MenuWidget->SetVisibility(ESlateVisibility::Hidden);
+			// Enable game-only input mode
+			FInputModeGameOnly InputModeData;
+			SetInputMode(InputModeData);
+
+			// Hide mouse cursor
+			this->bShowMouseCursor = false;
+
+			// Enable character movement and look
+			ALuxLabyrinthCharacter* LuxCharacter = Cast<ALuxLabyrinthCharacter>(GetPawn());
+			if (LuxCharacter)
+			{
+				bIsInputEnabled = true;
+			}
+			OnToggleMenu.Broadcast();
+		}
+		else
+		{
+			MenuWidget->SetVisibility(ESlateVisibility::Visible);
+			// Enable game and UI input mode
+			FInputModeGameAndUI InputModeData;
+			InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			InputModeData.SetWidgetToFocus(MenuWidget->TakeWidget());
+			SetInputMode(InputModeData);
+
+			// Show mouse cursor
+			this->bShowMouseCursor = true;
+
+			// Disable character movement and look
+			ALuxLabyrinthCharacter* LuxCharacter = Cast<ALuxLabyrinthCharacter>(GetPawn());
+			if (LuxCharacter)
+			{
+				bIsInputEnabled = false;
+			}
+			OnToggleMenu.Broadcast();
+		}
+	}
 }
